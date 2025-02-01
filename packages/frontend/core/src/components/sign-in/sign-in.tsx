@@ -2,7 +2,6 @@ import { Button, notify } from '@affine/component';
 import {
   AuthContainer,
   AuthContent,
-  AuthFooter,
   AuthHeader,
   AuthInput,
 } from '@affine/component/auth-components';
@@ -12,11 +11,7 @@ import { AuthService, ServerService } from '@affine/core/modules/cloud';
 import type { AuthSessionStatus } from '@affine/core/modules/cloud/entities/session';
 import { ServerDeploymentType } from '@affine/graphql';
 import { Trans, useI18n } from '@affine/i18n';
-import {
-  ArrowRightBigIcon,
-  LocalWorkspaceIcon,
-  PublishIcon,
-} from '@blocksuite/icons/rc';
+import { ArrowRightBigIcon, PublishIcon } from '@blocksuite/icons/rc';
 import { useLiveData, useService } from '@toeverything/infra';
 import { cssVar } from '@toeverything/theme';
 import {
@@ -28,7 +23,6 @@ import {
 } from 'react';
 
 import type { SignInState } from '.';
-import { Back } from './back';
 import * as style from './style.css';
 
 const emailRegex =
@@ -41,7 +35,6 @@ function validateEmail(email: string) {
 export const SignInStep = ({
   state,
   changeState,
-  onSkip,
   onAuthenticated,
 }: {
   state: SignInState;
@@ -176,7 +169,7 @@ export const SignInStep = ({
               <div className={style.skipDividerLine} />
             </div>
             <div className={style.skipSection}>
-              {BUILD_CONFIG.isNative ? (
+              {!isSelfhosted && BUILD_CONFIG.isNative && (
                 <Button
                   variant="plain"
                   className={style.addSelfhostedButton}
@@ -187,28 +180,11 @@ export const SignInStep = ({
                 >
                   {t['com.affine.auth.sign.add-selfhosted']()}
                 </Button>
-              ) : (
-                <div className={style.skipText}>
-                  {t['com.affine.mobile.sign-in.skip.hint']()}
-                </div>
               )}
-              <Button
-                variant="plain"
-                onClick={onSkip}
-                className={style.skipLink}
-                prefix={<LocalWorkspaceIcon className={style.skipLinkIcon} />}
-              >
-                {t['com.affine.mobile.sign-in.skip.link']()}
-              </Button>
             </div>
           </>
         )}
       </AuthContent>
-      {isSelfhosted && (
-        <AuthFooter>
-          <Back changeState={changeState} />
-        </AuthFooter>
-      )}
     </AuthContainer>
   );
 };
