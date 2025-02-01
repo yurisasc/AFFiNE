@@ -87,13 +87,13 @@ AFFiNE.server.port = 3010;
 //
 // /* Cloudflare R2 Plugin */
 // /* Enable if you choose to store workspace blobs or user avatars in Cloudflare R2 Storage Service */
-// AFFiNE.use('cloudflare-r2', {
-//   accountId: '',
-//   credentials: {
-//     accessKeyId: '',
-//     secretAccessKey: '',
-//   },
-// });
+AFFiNE.use('cloudflare-r2', {
+  accountId: process.env.R2_OBJECT_STORAGE_ACCOUNT_ID,
+  credentials: {
+    accessKeyId: process.env.R2_OBJECT_STORAGE_ACCESS_KEY_ID,
+    secretAccessKey: process.env.R2_OBJECT_STORAGE_SECRET_ACCESS_KEY,
+  },
+});
 //
 // /* AWS S3 Plugin */
 // /* Enable if you choose to store workspace blobs or user avatars in AWS S3 Storage Service */
@@ -147,20 +147,21 @@ AFFiNE.server.port = 3010;
 //   },
 // });
 //
-// /* Copilot Plugin */
-// AFFiNE.use('copilot', {
-//   openai: {
-//     apiKey: 'your-key',
-//   },
-//   fal: {
-//     apiKey: 'your-key',
-//   },
-//   unsplashKey: 'your-key',
-//   storage: {
-//     provider: 'cloudflare-r2',
-//     bucket: 'copilot',
-//   }
-// })
+/* Copilot Plugin */
+AFFiNE.use('copilot', {
+  openai: {
+    apiKey: process.env.COPILOT_OPENAI_API_KEY,
+    baseURL: process.env.COPILOT_OPENAI_BASE_URL,
+  },
+  //   fal: {
+  //     apiKey: 'your-key',
+  //   },
+  //   unsplashKey: 'your-key',
+  storage: {
+    provider: 'cloudflare-r2',
+    bucket: 'copilot',
+  },
+});
 //
 // /* AFFiNE Link Preview & Image Proxy API */
 // AFFiNE.use('worker', {
