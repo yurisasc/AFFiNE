@@ -2033,6 +2033,7 @@ export interface MutationUpdateCommentArgs {
 
 export interface MutationUpdateCopilotPromptArgs {
   messages: Array<CopilotPromptMessageInput>;
+  model: Scalars['String']['input'];
   name: Scalars['String']['input'];
 }
 
@@ -3471,6 +3472,7 @@ export type GetPromptsQuery = {
 export type UpdatePromptMutationVariables = Exact<{
   name: Scalars['String']['input'];
   messages: Array<CopilotPromptMessageInput> | CopilotPromptMessageInput;
+  model: Scalars['String']['input'];
 }>;
 
 export type UpdatePromptMutation = {

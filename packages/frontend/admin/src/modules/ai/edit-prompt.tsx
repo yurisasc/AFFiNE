@@ -1,3 +1,4 @@
+import { Input } from '@affine/admin/components/ui/input';
 import { ScrollArea } from '@affine/admin/components/ui/scroll-area';
 import { Separator } from '@affine/admin/components/ui/separator';
 import { Textarea } from '@affine/admin/components/ui/textarea';
@@ -18,11 +19,12 @@ export function EditPrompt({
   const { closePanel } = useRightPanel();
 
   const [messages, setMessages] = useState(item.messages);
+  const [model, setModel] = useState(item.model);
   const { updatePrompt } = usePrompt();
 
   const disableSave = useMemo(
-    () => JSON.stringify(messages) === JSON.stringify(item.messages),
-    [item.messages, messages]
+    () => JSON.stringify(messages) === JSON.stringify(item.messages) && model === item.model,
+    [item.messages, messages, model, item.model]
   );
 
   const handleChange = useCallback(
@@ -37,21 +39,31 @@ export function EditPrompt({
     },
     [disableSave, messages, setCanSave]
   );
+  
+  const handleModelChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setModel(e.target.value);
+      setCanSave(e.target.value !== item.model || JSON.stringify(messages) !== JSON.stringify(item.messages));
+    },
+    [item.model, item.messages, messages, setCanSave]
+  );
+  
   const handleClose = useCallback(() => {
     setMessages(item.messages);
+    setModel(item.model);
     closePanel();
-  }, [closePanel, item.messages]);
+  }, [closePanel, item.messages, item.model]);
 
   const onConfirm = useCallback(() => {
     if (!disableSave) {
-      updatePrompt({ name: item.name, messages });
+      updatePrompt({ name: item.name, messages, model });
     }
     handleClose();
-  }, [disableSave, handleClose, item.name, messages, updatePrompt]);
+  }, [disableSave, handleClose, item.name, messages, model, updatePrompt]);
 
   useEffect(() => {
-    setMessages(item.messages);
-  }, [item.messages]);
+    setCanSave(!disableSave);
+  }, [disableSave, setCanSave]);
 
   return (
     <div className="flex flex-col h-full gap-1">
@@ -80,9 +92,11 @@ export function EditPrompt({
             ) : null}
             <div className="flex flex-col">
               <div className="text-sm font-medium">Model</div>
-              <div className="text-sm font-normal text-zinc-500">
-                {item.model}
-              </div>
+              <Input
+                value={model}
+                onChange={handleModelChange}
+                className="mt-1"
+              />
             </div>
             {item.config ? (
               <div className="flex flex-col border rounded p-3">

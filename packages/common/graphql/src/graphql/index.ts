@@ -282,8 +282,8 @@ export const getPromptsQuery = {
 export const updatePromptMutation = {
   id: 'updatePromptMutation' as const,
   op: 'updatePrompt',
-  query: `mutation updatePrompt($name: String!, $messages: [CopilotPromptMessageInput!]!) {
-  updateCopilotPrompt(name: $name, messages: $messages) {
+  query: `mutation updatePrompt($name: String!, $messages: [CopilotPromptMessageInput!]!, $model: String!) {
+  updateCopilotPrompt(name: $name, messages: $messages, model: $model) {
     name
     model
     action
