@@ -169,7 +169,7 @@ export const SignInStep = ({
               <div className={style.skipDividerLine} />
             </div>
             <div className={style.skipSection}>
-              {!isSelfhosted && BUILD_CONFIG.isNative && (
+              {BUILD_CONFIG.isNative && (
                 <Button
                   variant="plain"
                   className={style.addSelfhostedButton}
