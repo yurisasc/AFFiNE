@@ -22,6 +22,12 @@ export function EditPrompt({
   const [model, setModel] = useState(item.model);
   const { updatePrompt } = usePrompt();
 
+  // Update state when item prop changes
+  useEffect(() => {
+    setMessages(item.messages);
+    setModel(item.model);
+  }, [item]);
+
   const disableSave = useMemo(
     () => JSON.stringify(messages) === JSON.stringify(item.messages) && model === item.model,
     [item.messages, messages, model, item.model]
@@ -116,7 +122,7 @@ export function EditPrompt({
           <div className="px-5 py-4 overflow-y-auto space-y-[10px] flex flex-col">
             <div className="text-sm font-medium">Messages</div>
             {messages.map((message, index) => (
-              <div key={message.content} className="flex flex-col gap-3">
+              <div key={`${message.role}-${index}`} className="flex flex-col gap-3">
                 {index !== 0 && <Separator />}
                 <div>
                   <div className="text-sm font-normal">Role</div>
