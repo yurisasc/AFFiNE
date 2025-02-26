@@ -520,7 +520,7 @@ export interface CreateCopilotPromptInput {
   action?: InputMaybe<Scalars['String']['input']>;
   config?: InputMaybe<CopilotPromptConfigInput>;
   messages: Array<CopilotPromptMessageInput>;
-  model: CopilotModels;
+  model: Scalars['String']['input'];
   name: Scalars['String']['input'];
 }
 
@@ -1684,6 +1684,7 @@ export interface MutationUpdateAppConfigArgs {
 
 export interface MutationUpdateCopilotPromptArgs {
   messages: Array<CopilotPromptMessageInput>;
+  model: Scalars['String']['input'];
   name: Scalars['String']['input'];
 }
 
@@ -2771,6 +2772,7 @@ export type GetPromptsQuery = {
 export type UpdatePromptMutationVariables = Exact<{
   name: Scalars['String']['input'];
   messages: Array<CopilotPromptMessageInput> | CopilotPromptMessageInput;
+  model: Scalars['String']['input'];
 }>;
 
 export type UpdatePromptMutation = {

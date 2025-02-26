@@ -121,6 +121,7 @@ export class PromptService implements OnApplicationBootstrap {
   async update(
     name: string,
     messages: PromptMessage[],
+    model: string,
     modifyByApi: boolean = false,
     config?: PromptConfig
   ) {
@@ -130,6 +131,7 @@ export class PromptService implements OnApplicationBootstrap {
         config: config || undefined,
         updatedAt: new Date(),
         modified: modifyByApi,
+        model,
         messages: {
           // cleanup old messages
           deleteMany: {},

@@ -24,13 +24,16 @@ export const usePrompt = () => {
     async ({
       name,
       messages,
+      model,
     }: {
       name: string;
       messages: Prompt['messages'];
+      model: string;
     }) => {
       await trigger({
         name,
         messages,
+        model,
       })
         .then(async () => {
           await revalidate(getPromptsQuery);

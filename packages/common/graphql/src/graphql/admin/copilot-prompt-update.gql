@@ -1,8 +1,9 @@
 mutation updatePrompt(
   $name: String!
   $messages: [CopilotPromptMessageInput!]!
+  $model: String!
 ) {
-  updateCopilotPrompt(name: $name, messages: $messages) {
+  updateCopilotPrompt(name: $name, messages: $messages, model: $model) {
     name
     model
     action

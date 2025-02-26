@@ -684,9 +684,11 @@ export class PromptsManagementResolver {
   async updateCopilotPrompt(
     @Args('name') name: string,
     @Args('messages', { type: () => [CopilotPromptMessageType] })
-    messages: CopilotPromptMessageType[]
+    messages: CopilotPromptMessageType[],
+    @Args('model', { type: () => String, nullable: true })
+    model: string
   ) {
-    await this.promptService.update(name, messages, true);
+    await this.promptService.update(name, messages, model, true);
     return this.promptService.get(name);
   }
 }

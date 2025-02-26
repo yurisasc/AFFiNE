@@ -190,7 +190,7 @@ test('should be able to manage prompt', async t => {
     'should have two messages'
   );
 
-  await prompt.update('test', [{ role: 'system', content: 'hello' }]);
+  await prompt.update('test', [{ role: 'system', content: 'hello' }], 'test');
   t.is(
     (await prompt.get('test'))!.finish({}).length,
     1,

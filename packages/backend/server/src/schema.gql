@@ -406,7 +406,7 @@ input CreateCopilotPromptInput {
   action: String
   config: CopilotPromptConfigInput
   messages: [CopilotPromptMessageInput!]!
-  model: CopilotModels!
+  model: String!
   name: String!
 }
 
@@ -1191,7 +1191,7 @@ type Mutation {
   updateAppConfig(updates: [UpdateAppConfigInput!]!): JSONObject!
 
   """Update a copilot prompt"""
-  updateCopilotPrompt(messages: [CopilotPromptMessageInput!]!, name: String!): CopilotPromptType!
+  updateCopilotPrompt(messages: [CopilotPromptMessageInput!]!, name: String!, model: String!): CopilotPromptType!
 
   """Update a chat session"""
   updateCopilotSession(options: UpdateChatSessionInput!): String!
