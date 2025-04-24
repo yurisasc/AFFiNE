@@ -209,7 +209,11 @@ export class OpenAIProvider extends CopilotProvider<OpenAIConfig> {
   #instance!: VercelOpenAIProvider;
 
   override configured(): boolean {
-    return !!this.config.apiKey;
+    const result = !!this.config.apiKey;
+    console.log(
+      `OpenAI provider configuration check: ${result}, key prefix: ${this.config.apiKey ? this.config.apiKey.substring(0, 5) + '...' : 'none'}`
+    );
+    return result;
   }
 
   protected override setup() {
