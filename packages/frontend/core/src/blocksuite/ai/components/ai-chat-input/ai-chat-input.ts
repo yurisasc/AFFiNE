@@ -669,6 +669,8 @@ export class AIChatInput extends SignalWatcher(
   };
 
   private async _getMatchedContexts(userInput: string) {
+    console.log('Matching context for input:', userInput);
+
     const contextId = await this.getContextId();
     const workspaceId = this.host.store.workspace.id;
 
@@ -742,7 +744,7 @@ export class AIChatInput extends SignalWatcher(
       };
     });
 
-    return {
+    const result = {
       docs,
       files: Array.from(fileContexts.values()),
     };
