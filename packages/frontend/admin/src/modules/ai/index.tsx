@@ -1,14 +1,11 @@
-import { Switch } from '@affine/admin/components/ui/switch';
 import { cn } from '@affine/admin/utils';
 import * as ScrollAreaPrimitive from '@radix-ui/react-scroll-area';
-import { useState } from 'react';
 
 import { Header } from '../header';
+import { Keys } from './keys';
 import { Prompts } from './prompts';
 
 function AiPage() {
-  const [enableAi, setEnableAi] = useState(false);
-
   return (
     <div className="h-screen flex-1 flex-col flex">
       <Header title="AI" />
@@ -17,18 +14,9 @@ function AiPage() {
       >
         <ScrollAreaPrimitive.Viewport className="h-full w-full rounded-[inherit] [&>div]:!block">
           <div className="p-6 max-w-3xl mx-auto">
-            <div className="text-[20px]">AI</div>
-            <div className="flex justify-between items-center">
-              <div>
-                <p className="text-[15px] font-medium mt-6">Enable AI</p>
-                <p className="text-sm text-muted-foreground mt-1">
-                  AI functionality is not currently supported. Self-hosted AI
-                  support is in progress.
-                </p>
-              </div>
-              <Switch checked={enableAi} onCheckedChange={setEnableAi} />
-            </div>
+            <div className="text-[20px] mb-4">AI Configuration</div>
           </div>
+          <Keys />
           <Prompts />
         </ScrollAreaPrimitive.Viewport>
         <ScrollAreaPrimitive.ScrollAreaScrollbar
