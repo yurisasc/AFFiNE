@@ -327,6 +327,16 @@ export class OpenAIProvider extends CopilotProvider<OpenAIConfig> {
     return result;
   }
 
+  /**
+   * Assume the models are always available.
+   * If there are any issues, check the admin panel to verify the models.
+   * @param _ model name
+   * @returns true
+   */
+  override isModelAvailable(_: string): Promise<boolean> | boolean {
+    return true;
+  }
+
   protected override setup() {
     super.setup();
     this.#instance =
