@@ -4,6 +4,7 @@ import * as ScrollAreaPrimitive from '@radix-ui/react-scroll-area';
 import { Header } from '../header';
 import { Keys } from './keys';
 import { Prompts } from './prompts';
+import { Storage } from './storage';
 
 function AiPage() {
   return (
@@ -13,10 +14,8 @@ function AiPage() {
         className={cn('relative overflow-hidden w-full')}
       >
         <ScrollAreaPrimitive.Viewport className="h-full w-full rounded-[inherit] [&>div]:!block">
-          <div className="p-6 max-w-3xl mx-auto">
-            <div className="text-[20px] mb-4">AI Configuration</div>
-          </div>
           <Keys />
+          <Storage />
           <Prompts />
         </ScrollAreaPrimitive.Viewport>
         <ScrollAreaPrimitive.ScrollAreaScrollbar

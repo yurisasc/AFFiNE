@@ -24,6 +24,28 @@ export type ApiKeys = {
   unsplash?: {
     key: string;
   };
+  storage?: {
+    provider: 'fs' | 'aws-s3' | 'cloudflare-r2';
+    bucket: string;
+    config: {
+      // FS provider
+      path?: string;
+
+      // AWS S3 & Cloudflare R2 common fields
+      region?: string;
+      endpoint?: string;
+      accessKeyId?: string;
+      secretAccessKey?: string;
+
+      // Cloudflare R2 specific fields
+      accountId?: string;
+      usePresignedURL?: {
+        enabled: boolean;
+        urlPrefix: string;
+        signKey: string;
+      };
+    };
+  };
 };
 
 export const useKeys = () => {
@@ -51,6 +73,11 @@ export const useKeys = () => {
       gemini: providers.gemini || { apiKey: '' },
       perplexity: providers.perplexity || { apiKey: '' },
       unsplash: data.appConfig.copilot.unsplash || { key: '' },
+      storage: data.appConfig.copilot.storage || {
+        provider: '',
+        bucket: '',
+        config: { path: '' },
+      },
     } as ApiKeys;
   };
 
@@ -61,10 +88,12 @@ export const useKeys = () => {
       config,
     }: {
       provider: keyof ApiKeys;
-      config: Record<string, string>;
+      config: Record<string, any>;
     }) => {
       const key =
-        provider === 'unsplash' ? 'unsplash' : `providers.${provider}`;
+        provider === 'unsplash' || provider === 'storage'
+          ? provider
+          : `providers.${provider}`;
 
       try {
         await trigger({
