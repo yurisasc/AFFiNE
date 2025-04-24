@@ -3,12 +3,13 @@ import { Input } from '@affine/admin/components/ui/input';
 import { Label } from '@affine/admin/components/ui/label';
 import { Separator } from '@affine/admin/components/ui/separator';
 import { Loader2 } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { useKeys } from './use-keys';
 
 export function Keys() {
   const { apiKeys, loading, updateKey } = useKeys();
+  const initialLoadDone = useRef(false);
 
   const [openAIKey, setOpenAIKey] = useState('');
   const [openAIBaseUrl, setOpenAIBaseUrl] = useState('');
@@ -19,15 +20,16 @@ export function Keys() {
 
   const [savingStates, setSavingStates] = useState<Record<string, boolean>>({});
 
-  // Load initial values when data is available
+  // Load initial values only once when data is first available
   useEffect(() => {
-    if (!loading && apiKeys) {
+    if (!loading && apiKeys && !initialLoadDone.current) {
       setOpenAIKey(apiKeys.openai?.apiKey || '');
       setOpenAIBaseUrl(apiKeys.openai?.baseUrl || '');
       setFalAIKey(apiKeys.fal?.apiKey || '');
       setGeminiKey(apiKeys.gemini?.apiKey || '');
       setPerplexityKey(apiKeys.perplexity?.apiKey || '');
       setUnsplashKey(apiKeys.unsplash?.key || '');
+      initialLoadDone.current = true;
     }
   }, [apiKeys, loading]);
 
@@ -56,7 +58,7 @@ export function Keys() {
       <div className="flex-grow overflow-y-auto space-y-[10px]">
         <div className="flex flex-col rounded-md border py-4 gap-4">
           {/* OpenAI Configuration */}
-          <div className="px-5 space-y-3">
+          <div className="px-5 space-y-4">
             <Label className="text-sm font-medium">OpenAI Key</Label>
             <div className="flex items-center gap-2">
               <Input
@@ -82,7 +84,7 @@ export function Keys() {
                 )}
               </Button>
             </div>
-            <Label className="text-sm font-medium mt-2">
+            <Label className="text-sm font-medium mt-3">
               OpenAI Base URL (optional)
             </Label>
             <div className="flex items-center gap-2">
@@ -102,7 +104,7 @@ export function Keys() {
           <Separator />
 
           {/* Fal.AI Key */}
-          <div className="px-5 space-y-3">
+          <div className="px-5 space-y-4">
             <Label className="text-sm font-medium">Fal.AI Key</Label>
             <div className="flex items-center gap-2">
               <Input
@@ -128,7 +130,7 @@ export function Keys() {
           <Separator />
 
           {/* Gemini Key */}
-          <div className="px-5 space-y-3">
+          <div className="px-5 space-y-4">
             <Label className="text-sm font-medium">Google Gemini Key</Label>
             <div className="flex items-center gap-2">
               <Input
@@ -154,7 +156,7 @@ export function Keys() {
           <Separator />
 
           {/* Perplexity Key */}
-          <div className="px-5 space-y-3">
+          <div className="px-5 space-y-4">
             <Label className="text-sm font-medium">Perplexity API Key</Label>
             <div className="flex items-center gap-2">
               <Input
@@ -182,7 +184,7 @@ export function Keys() {
           <Separator />
 
           {/* Unsplash Key */}
-          <div className="px-5 space-y-3">
+          <div className="px-5 space-y-4">
             <Label className="text-sm font-medium">Unsplash API Key</Label>
             <div className="flex items-center gap-2">
               <Input
