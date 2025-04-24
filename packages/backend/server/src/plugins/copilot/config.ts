@@ -124,7 +124,7 @@ function createUnsplashValidator(envVarName?: string) {
  */
 function createStorageValidator() {
   return (
-    val: unknown
+    _: unknown
   ): z.SafeParseReturnType<StorageProviderConfig, StorageProviderConfig> => {
     // Get R2 credentials from environment variables
     const accountId = process.env.R2_OBJECT_STORAGE_ACCOUNT_ID || '';
@@ -132,7 +132,7 @@ function createStorageValidator() {
     const secretAccessKey =
       process.env.R2_OBJECT_STORAGE_SECRET_ACCESS_KEY || '';
 
-    // Default fs storage config - fallback if no other configuration is valid
+    // Default fs storage config
     const defaultConfig: StorageProviderConfig = {
       provider: 'fs',
       bucket: 'copilot',
@@ -141,55 +141,38 @@ function createStorageValidator() {
       },
     };
 
-    // Skip validation and apply direct overrides if we have R2 environment variables
+    // Handle R2 configuration if all credentials are present
     if (accountId && accessKeyId && secretAccessKey) {
-      console.log(
-        'Using R2 storage provider with credentials from environment variables'
-      );
-      // Return success directly with a valid R2 configuration
-      return {
-        success: true,
-        data: {
-          provider: 'cloudflare-r2',
-          bucket: 'copilot',
-          config: {
-            accountId,
-            credentials: {
-              accessKeyId,
-              secretAccessKey,
-            },
+      // Always return a valid R2 config when env vars are present
+      const r2Config: StorageProviderConfig = {
+        provider: 'cloudflare-r2',
+        bucket: 'copilot',
+        config: {
+          accountId,
+          credentials: {
+            accessKeyId,
+            secretAccessKey,
           },
-        } as StorageProviderConfig,
+        },
       };
-    }
 
-    // Otherwise, handle existing configuration
-    if (typeof val === 'object' && val !== null) {
-      const config = val as Partial<StorageProviderConfig>;
+      console.log(
+        'Creating R2 storage config from env vars:',
+        JSON.stringify(r2Config, null, 2)
+      );
 
-      // Make sure we have a valid provider field
-      if (!config.provider) {
-        config.provider = defaultConfig.provider;
-      }
-
-      // Make sure we have a valid bucket field
-      if (!config.bucket) {
-        config.bucket = defaultConfig.bucket;
-      }
-
-      // Make sure we have a valid config field
-      if (!config.config) {
-        config.config = defaultConfig.config;
-      }
-
-      // Return the validated config
+      // Return directly, without validation
       return {
         success: true,
-        data: config as StorageProviderConfig,
+        data: r2Config,
       };
     }
 
-    // Use default fs storage as a last resort
+    // For non-R2 configurations, use provided or default
+    console.log(
+      'Using default storage config:',
+      JSON.stringify(defaultConfig, null, 2)
+    );
     return {
       success: true,
       data: defaultConfig,
@@ -201,7 +184,7 @@ function createStorageValidator() {
  * Special validator for OpenAI to handle both apiKey and baseUrl
  */
 function createOpenAIValidator() {
-  return (val: unknown) => {
+  return (_: unknown) => {
     const schema = z.object({
       apiKey: z.string(),
       baseUrl: z.string().optional(),
@@ -209,37 +192,10 @@ function createOpenAIValidator() {
 
     const apiKeyFromEnv = process.env.AFFINE_COPILOT_OPENAI_API_KEY || '';
     const baseUrlFromEnv = process.env.AFFINE_COPILOT_OPENAI_BASE_URL || '';
-    let config: OpenAIConfig = { apiKey: '', baseUrl: '' };
-
-    // Handle string input (treat as API key)
-    if (typeof val === 'string') {
-      try {
-        // Try parsing as JSON first
-        const parsed = JSON.parse(val);
-        config = { ...config, ...parsed };
-      } catch {
-        // If not valid JSON, treat as API key
-        config.apiKey = val || apiKeyFromEnv;
-        if (baseUrlFromEnv) {
-          config.baseUrl = baseUrlFromEnv;
-        }
-        return schema.safeParse(config);
-      }
-    }
-    // Handle object input
-    else if (val && typeof val === 'object') {
-      const typedVal = val as Partial<OpenAIConfig>;
-      config = { ...config, ...typedVal };
-
-      // Apply env values if properties are empty in val
-      if (!config.apiKey && apiKeyFromEnv) {
-        config.apiKey = apiKeyFromEnv;
-      }
-
-      if (!config.baseUrl && baseUrlFromEnv) {
-        config.baseUrl = baseUrlFromEnv;
-      }
-    }
+    let config: OpenAIConfig = {
+      apiKey: apiKeyFromEnv,
+      baseUrl: baseUrlFromEnv,
+    };
 
     return schema.safeParse(config);
   };
