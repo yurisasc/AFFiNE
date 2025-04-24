@@ -4,6 +4,7 @@ import * as ScrollAreaPrimitive from '@radix-ui/react-scroll-area';
 import { useState } from 'react';
 
 import { Header } from '../header';
+import { Prompts } from './prompts';
 
 function AiPage() {
   const [enableAi, setEnableAi] = useState(false);
@@ -25,14 +26,10 @@ function AiPage() {
                   support is in progress.
                 </p>
               </div>
-              <Switch
-                checked={enableAi}
-                onCheckedChange={setEnableAi}
-                disabled={true}
-              />
+              <Switch checked={enableAi} onCheckedChange={setEnableAi} />
             </div>
           </div>
-          {/* <Prompts /> */}
+          <Prompts />
         </ScrollAreaPrimitive.Viewport>
         <ScrollAreaPrimitive.ScrollAreaScrollbar
           className={cn(
