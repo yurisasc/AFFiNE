@@ -24,6 +24,7 @@ defineModuleConfig('server', {
   name: {
     desc: 'A recognizable name for the server. Will be shown when connected with AFFiNE Desktop.',
     default: undefined,
+    env: 'AFFINE_SERVER_NAME',
     shape: z.string().optional(),
   },
   externalUrl: {
