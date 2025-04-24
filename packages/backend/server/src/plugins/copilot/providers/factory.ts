@@ -22,6 +22,7 @@ export class CopilotProviderFactory {
       `Resolving copilot provider for output type: ${cond.outputType}`
     );
     let candidate: CopilotProvider | null = null;
+    this.logger.debug(`Total registered providers: ${this.#providers.size}`);
     for (const [type, provider] of this.#providers.entries()) {
       if (filter.prefer && filter.prefer !== type) {
         continue;
