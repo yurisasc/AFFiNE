@@ -296,7 +296,7 @@ export function getDefaultConfig(): AppConfig {
         }
       }
 
-      const { success, error } = desc.validate(defaultValue);
+      const { success, error, data } = desc.validate(defaultValue);
 
       if (!success) {
         throw new Error(
@@ -310,7 +310,7 @@ Error: ${issue.message}`;
         );
       }
 
-      set(modulizedConfig, key, defaultValue);
+      set(modulizedConfig, key, data ?? defaultValue);
     }
 
     // @ts-expect-error all keys are known

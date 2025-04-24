@@ -184,20 +184,17 @@ function createStorageValidator() {
  * Special validator for OpenAI to handle both apiKey and baseUrl
  */
 function createOpenAIValidator() {
-  return (_: unknown) => {
-    const schema = z.object({
-      apiKey: z.string(),
-      baseUrl: z.string().optional(),
-    });
-
+  return (_: unknown): z.SafeParseReturnType<OpenAIConfig, OpenAIConfig> => {
     const apiKeyFromEnv = process.env.AFFINE_COPILOT_OPENAI_API_KEY || '';
     const baseUrlFromEnv = process.env.AFFINE_COPILOT_OPENAI_BASE_URL || '';
     let config: OpenAIConfig = {
       apiKey: apiKeyFromEnv,
       baseUrl: baseUrlFromEnv,
     };
-
-    return schema.safeParse(config);
+    return {
+      success: true,
+      data: config,
+    };
   };
 }
 
