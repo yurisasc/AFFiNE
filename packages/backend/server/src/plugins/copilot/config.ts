@@ -51,6 +51,23 @@ defineModuleConfig('copilot', {
     default: {
       apiKey: '',
       baseUrl: 'https://openrouter.ai/api/v1',
+      models: [
+        'gpt-4o',
+        'gpt-4o-2024-08-06',
+        'gpt-4o-mini',
+        'gpt-4o-mini-2024-07-18',
+        'gpt-4.1',
+        'gpt-4.1-2025-04-14',
+        'gpt-4.1-mini',
+        'o1',
+        'o3-mini',
+        'text-embedding-3-large',
+        'text-embedding-3-small',
+        'text-embedding-ada-002',
+        'text-moderation-latest',
+        'text-moderation-stable',
+        'dall-e-3',
+      ],
     },
     link: 'https://github.com/openai/openai-node',
   },
@@ -60,6 +77,17 @@ defineModuleConfig('copilot', {
     desc: 'The config for the fal provider.',
     default: {
       apiKey: '',
+      models: [
+        'fast-turbo-diffusion',
+        'lcm-sd15-i2i',
+        'clarity-upscaler',
+        'face-to-sticker',
+        'imageutils/rembg',
+        'fast-sdxl/image-to-image',
+        'workflowutils/teed',
+        'lora/image-to-image',
+        'llava-next',
+      ],
     },
   },
 
@@ -68,6 +96,11 @@ defineModuleConfig('copilot', {
     desc: 'The config for the gemini provider.',
     default: {
       apiKey: '',
+      models: [
+        'gemini-2.0-flash-001',
+        'gemini-2.5-pro-preview-03-25',
+        'text-embedding-004',
+      ],
     },
   },
   'providers.geminiVertex': {
@@ -79,6 +112,7 @@ defineModuleConfig('copilot', {
     desc: 'The config for the perplexity provider.',
     default: {
       apiKey: '',
+      models: ['sonar', 'sonar-pro', 'sonar-reasoning', 'sonar-reasoning-pro'],
     },
   },
   'providers.anthropic': {

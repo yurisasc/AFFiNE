@@ -19,6 +19,7 @@ import { chatToGPTMessage, CitationParser } from './utils';
 
 export type PerplexityConfig = {
   apiKey: string;
+  models?: string[];
   endpoint?: string;
 };
 

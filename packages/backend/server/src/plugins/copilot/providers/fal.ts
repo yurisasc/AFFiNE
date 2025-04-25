@@ -22,6 +22,7 @@ import { CopilotProviderType, ModelInputType, ModelOutputType } from './types';
 
 export type FalConfig = {
   apiKey: string;
+  models?: string[];
 };
 
 const FalImageSchema = z
