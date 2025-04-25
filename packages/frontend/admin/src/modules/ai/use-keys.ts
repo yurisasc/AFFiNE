@@ -11,15 +11,19 @@ export type ApiKeys = {
   openai?: {
     apiKey: string;
     baseUrl?: string;
+    models?: string[];
   };
   fal?: {
     apiKey: string;
+    models?: string[];
   };
   gemini?: {
     apiKey: string;
+    models?: string[];
   };
   perplexity?: {
     apiKey: string;
+    models?: string[];
   };
   unsplash?: {
     key: string;
@@ -68,10 +72,10 @@ export const useKeys = () => {
 
     const { providers } = data.appConfig.copilot;
     return {
-      openai: providers.openai || { apiKey: '', baseUrl: '' },
-      fal: providers.fal || { apiKey: '' },
-      gemini: providers.gemini || { apiKey: '' },
-      perplexity: providers.perplexity || { apiKey: '' },
+      openai: providers.openai || { apiKey: '', baseUrl: '', models: [] },
+      fal: providers.fal || { apiKey: '', models: [] },
+      gemini: providers.gemini || { apiKey: '', models: [] },
+      perplexity: providers.perplexity || { apiKey: '', models: [] },
       unsplash: data.appConfig.copilot.unsplash || { key: '' },
       storage: data.appConfig.copilot.storage || {
         provider: '',
