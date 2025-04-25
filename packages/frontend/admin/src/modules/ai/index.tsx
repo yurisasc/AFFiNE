@@ -3,6 +3,7 @@ import * as ScrollAreaPrimitive from '@radix-ui/react-scroll-area';
 
 import { Header } from '../header';
 import { Keys } from './keys';
+import { Models } from './models';
 import { Prompts } from './prompts';
 import { Storage } from './storage';
 
@@ -16,6 +17,7 @@ function AiPage() {
         <ScrollAreaPrimitive.Viewport className="h-full w-full rounded-[inherit] [&>div]:!block">
           <Keys />
           <Storage />
+          <Models />
           <Prompts />
         </ScrollAreaPrimitive.Viewport>
         <ScrollAreaPrimitive.ScrollAreaScrollbar
