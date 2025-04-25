@@ -31,7 +31,6 @@ export function Storage() {
 
   // S3 & R2 common fields
   const [region, setRegion] = useState('');
-  const [endpoint, setEndpoint] = useState('');
   const [accessKeyId, setAccessKeyId] = useState('');
   const [secretAccessKey, setSecretAccessKey] = useState('');
 
@@ -55,7 +54,6 @@ export function Storage() {
 
         // S3 & R2 common fields
         setRegion(apiKeys.storage.config?.region || '');
-        setEndpoint(apiKeys.storage.config?.endpoint || '');
         setAccessKeyId(apiKeys.storage.config?.accessKeyId || '');
         setSecretAccessKey(apiKeys.storage.config?.secretAccessKey || '');
 
@@ -91,19 +89,21 @@ export function Storage() {
           bucket: storageBucket,
           config: {
             region,
-            endpoint,
-            accessKeyId,
-            secretAccessKey,
+            credentials: {
+              accessKeyId,
+              secretAccessKey,
+            },
           },
         };
       } else {
         // cloudflare-r2
         const r2Config: Record<string, any> = {
           region,
-          endpoint,
-          accessKeyId,
-          secretAccessKey,
           accountId,
+          credentials: {
+            accessKeyId,
+            secretAccessKey,
+          },
         };
 
         if (usePresignedURL) {
@@ -157,27 +157,18 @@ export function Storage() {
       case 'cloudflare-r2':
         return (
           <div className="space-y-4">
-            <Label className="text-sm font-medium">Region</Label>
-            <Input
-              type="text"
-              className="py-2 px-3 text-base font-normal"
-              value={region}
-              placeholder="us-east-1"
-              onChange={e => setRegion(e.target.value)}
-            />
-
-            <Label className="text-sm font-medium">Endpoint</Label>
-            <Input
-              type="text"
-              className="py-2 px-3 text-base font-normal"
-              value={endpoint}
-              placeholder={
-                storageProvider === 'cloudflare-r2'
-                  ? 'https://<account-id>.r2.cloudflarestorage.com'
-                  : 'https://s3.amazonaws.com'
-              }
-              onChange={e => setEndpoint(e.target.value)}
-            />
+            {storageProvider === 'aws-s3' && (
+              <>
+                <Label className="text-sm font-medium">Region</Label>
+                <Input
+                  type="text"
+                  className="py-2 px-3 text-base font-normal"
+                  value={region}
+                  placeholder="us-east-1"
+                  onChange={e => setRegion(e.target.value)}
+                />
+              </>
+            )}
 
             <Label className="text-sm font-medium">Access Key ID</Label>
             <Input
