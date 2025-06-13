@@ -9,6 +9,7 @@ import { CopilotProviderSideError, metrics } from '../../../base';
 import { CopilotProvider } from './provider';
 import {
   CopilotChatOptions,
+  CopilotProviderModel,
   CopilotProviderType,
   ModelConditions,
   ModelInputType,
@@ -20,6 +21,7 @@ import { chatToGPTMessage, CitationParser } from './utils';
 export type PerplexityConfig = {
   apiKey: string;
   endpoint?: string;
+  models?: CopilotProviderModel[];
 };
 
 const PerplexityErrorSchema = z.union([
@@ -46,7 +48,7 @@ type PerplexityError = z.infer<typeof PerplexityErrorSchema>;
 export class PerplexityProvider extends CopilotProvider<PerplexityConfig> {
   readonly type = CopilotProviderType.Perplexity;
 
-  readonly models = [
+  readonly defaultModels = [
     {
       name: 'Sonar',
       id: 'sonar',

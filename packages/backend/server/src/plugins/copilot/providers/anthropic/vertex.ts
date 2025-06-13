@@ -4,15 +4,22 @@ import {
   type GoogleVertexAnthropicProviderSettings,
 } from '@ai-sdk/google-vertex/anthropic';
 
-import { CopilotProviderType, ModelInputType, ModelOutputType } from '../types';
+import {
+  CopilotProviderModel,
+  CopilotProviderType,
+  ModelInputType,
+  ModelOutputType,
+} from '../types';
 import { AnthropicProvider } from './anthropic';
 
-export type AnthropicVertexConfig = GoogleVertexAnthropicProviderSettings;
+export type AnthropicVertexConfig = GoogleVertexAnthropicProviderSettings & {
+  models?: CopilotProviderModel[];
+};
 
 export class AnthropicVertexProvider extends AnthropicProvider<AnthropicVertexConfig> {
   override readonly type = CopilotProviderType.AnthropicVertex;
 
-  override readonly models = [
+  override readonly defaultModels = [
     {
       id: 'claude-opus-4@20250514',
       capabilities: [

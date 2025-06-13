@@ -24,17 +24,21 @@ import type {
   ModelConditions,
   PromptMessage,
 } from '../types';
-import { ModelOutputType } from '../types';
+import { CopilotProviderModel, ModelOutputType } from '../types';
 import { chatToGPTMessage, TextStreamParser } from '../utils';
 
 export const DEFAULT_DIMENSIONS = 256;
 
 export type GeminiConfig = {
-  apiKey: string;
+  apiKey?: string;
   baseUrl?: string;
+  models?: CopilotProviderModel[];
 };
 
-export abstract class GeminiProvider<T> extends CopilotProvider<T> {
+export abstract class GeminiProvider<
+  T extends GeminiConfig,
+> extends CopilotProvider<T> {
+  abstract override readonly defaultModels: CopilotProviderModel[];
   private readonly MAX_STEPS = 20;
 
   protected abstract instance:

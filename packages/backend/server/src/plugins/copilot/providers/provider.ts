@@ -39,7 +39,7 @@ import {
 export abstract class CopilotProvider<C = any> {
   protected readonly logger = new Logger(this.constructor.name);
   abstract readonly type: CopilotProviderType;
-  abstract readonly models: CopilotProviderModel[];
+  abstract readonly defaultModels: CopilotProviderModel[];
   abstract configured(): boolean;
 
   @Inject() protected readonly AFFiNEConfig!: Config;
@@ -48,6 +48,18 @@ export abstract class CopilotProvider<C = any> {
 
   get config(): C {
     return this.AFFiNEConfig.copilot.providers[this.type] as C;
+  }
+
+  /**
+   * Get models with priority to configured models, falling back to default models
+   */
+  get models(): CopilotProviderModel[] {
+    // Use config models if available, otherwise use default models
+    const configWithModels = this.config as any;
+    return Array.isArray(configWithModels?.models) &&
+      configWithModels.models.length > 0
+      ? configWithModels.models
+      : this.defaultModels;
   }
 
   @OnEvent('config.init')

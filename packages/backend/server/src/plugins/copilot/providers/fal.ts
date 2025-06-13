@@ -18,10 +18,16 @@ import type {
   ModelConditions,
   PromptMessage,
 } from './types';
-import { CopilotProviderType, ModelInputType, ModelOutputType } from './types';
+import {
+  CopilotProviderModel,
+  CopilotProviderType,
+  ModelInputType,
+  ModelOutputType,
+} from './types';
 
 export type FalConfig = {
   apiKey: string;
+  models?: CopilotProviderModel[];
 };
 
 const FalImageSchema = z
@@ -73,7 +79,7 @@ type FalPrompt = {
 export class FalProvider extends CopilotProvider<FalConfig> {
   override type = CopilotProviderType.FAL;
 
-  override readonly models = [
+  override readonly defaultModels = [
     // image to image models
     {
       id: 'lcm-sd15-i2i',

@@ -31,7 +31,12 @@ import type {
   ModelConditions,
   PromptMessage,
 } from './types';
-import { CopilotProviderType, ModelInputType, ModelOutputType } from './types';
+import {
+  CopilotProviderModel,
+  CopilotProviderType,
+  ModelInputType,
+  ModelOutputType,
+} from './types';
 import { chatToGPTMessage, CitationParser, TextStreamParser } from './utils';
 
 export const DEFAULT_DIMENSIONS = 256;
@@ -39,6 +44,7 @@ export const DEFAULT_DIMENSIONS = 256;
 export type OpenAIConfig = {
   apiKey: string;
   baseUrl?: string;
+  models?: CopilotProviderModel[];
 };
 
 const ImageResponseSchema = z.union([
@@ -58,7 +64,7 @@ const ImageResponseSchema = z.union([
 export class OpenAIProvider extends CopilotProvider<OpenAIConfig> {
   readonly type = CopilotProviderType.OpenAI;
 
-  readonly models = [
+  readonly defaultModels = [
     // Text to Text models
     {
       id: 'gpt-4o',

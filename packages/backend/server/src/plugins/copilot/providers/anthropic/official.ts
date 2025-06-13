@@ -3,18 +3,24 @@ import {
   createAnthropic,
 } from '@ai-sdk/anthropic';
 
-import { CopilotProviderType, ModelInputType, ModelOutputType } from '../types';
+import {
+  CopilotProviderModel,
+  CopilotProviderType,
+  ModelInputType,
+  ModelOutputType,
+} from '../types';
 import { AnthropicProvider } from './anthropic';
 
 export type AnthropicOfficialConfig = {
   apiKey: string;
   baseUrl?: string;
+  models?: CopilotProviderModel[];
 };
 
 export class AnthropicOfficialProvider extends AnthropicProvider<AnthropicOfficialConfig> {
   override readonly type = CopilotProviderType.Anthropic;
 
-  override readonly models = [
+  override readonly defaultModels = [
     {
       id: 'claude-opus-4-20250514',
       capabilities: [

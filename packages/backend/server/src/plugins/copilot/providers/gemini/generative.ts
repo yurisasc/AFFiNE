@@ -3,18 +3,24 @@ import {
   type GoogleGenerativeAIProvider,
 } from '@ai-sdk/google';
 
-import { CopilotProviderType, ModelInputType, ModelOutputType } from '../types';
+import {
+  CopilotProviderModel,
+  CopilotProviderType,
+  ModelInputType,
+  ModelOutputType,
+} from '../types';
 import { GeminiProvider } from './gemini';
 
 export type GeminiGenerativeConfig = {
   apiKey: string;
   baseUrl?: string;
+  models?: CopilotProviderModel[];
 };
 
 export class GeminiGenerativeProvider extends GeminiProvider<GeminiGenerativeConfig> {
   override readonly type = CopilotProviderType.Gemini;
 
-  readonly models = [
+  override readonly defaultModels = [
     {
       name: 'Gemini 2.0 Flash',
       id: 'gemini-2.0-flash-001',

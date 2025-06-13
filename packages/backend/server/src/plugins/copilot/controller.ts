@@ -48,6 +48,8 @@ import { CurrentUser, Public } from '../../core/auth';
 import {
   CopilotProvider,
   CopilotProviderFactory,
+  CopilotProviderModel,
+  CopilotProviderType,
   ModelInputType,
   ModelOutputType,
 } from './providers';
@@ -187,6 +189,12 @@ export class CopilotController implements BeforeApplicationShutdown {
     );
 
     return merge(source$.pipe(finalize(() => subject$.next(null))), ping$);
+  }
+
+  @Get('default-models')
+  @Public()
+  getDefaultModels(): Record<CopilotProviderType, CopilotProviderModel[]> {
+    return this.provider.getDefaultModels();
   }
 
   @Get('/chat/:sessionId')

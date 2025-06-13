@@ -4,15 +4,22 @@ import {
   type GoogleVertexProviderSettings,
 } from '@ai-sdk/google-vertex';
 
-import { CopilotProviderType, ModelInputType, ModelOutputType } from '../types';
+import {
+  CopilotProviderModel,
+  CopilotProviderType,
+  ModelInputType,
+  ModelOutputType,
+} from '../types';
 import { GeminiProvider } from './gemini';
 
-export type GeminiVertexConfig = GoogleVertexProviderSettings;
+export type GeminiVertexConfig = GoogleVertexProviderSettings & {
+  models?: CopilotProviderModel[];
+};
 
 export class GeminiVertexProvider extends GeminiProvider<GeminiVertexConfig> {
   override readonly type = CopilotProviderType.GeminiVertex;
 
-  readonly models = [
+  override readonly defaultModels = [
     {
       name: 'Gemini 2.5 Flash',
       id: 'gemini-2.5-flash',

@@ -2,7 +2,11 @@ import { Injectable, Logger } from '@nestjs/common';
 
 import { ServerFeature, ServerService } from '../../../core';
 import type { CopilotProvider } from './provider';
-import { CopilotProviderType, ModelFullConditions } from './types';
+import {
+  CopilotProviderModel,
+  CopilotProviderType,
+  ModelFullConditions,
+} from './types';
 
 @Injectable()
 export class CopilotProviderFactory {
@@ -70,6 +74,22 @@ export class CopilotProviderFactory {
     this.#providers.set(provider.type, provider);
     this.logger.log(`Copilot provider [${provider.type}] registered.`);
     this.server.enableFeature(ServerFeature.Copilot);
+  }
+
+  /**
+   * Get all default models from all registered providers
+   * @returns Object mapping provider types to their default models
+   */
+  getDefaultModels(): Record<CopilotProviderType, CopilotProviderModel[]> {
+    const defaultModels: Partial<
+      Record<CopilotProviderType, CopilotProviderModel[]>
+    > = {};
+
+    for (const [type, provider] of this.#providers.entries()) {
+      defaultModels[type] = provider.defaultModels;
+    }
+
+    return defaultModels as Record<CopilotProviderType, CopilotProviderModel[]>;
   }
 
   unregister(provider: CopilotProvider) {
