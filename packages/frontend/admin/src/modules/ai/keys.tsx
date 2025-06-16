@@ -5,7 +5,7 @@ import { Separator } from '@affine/admin/components/ui/separator';
 import { Loader2 } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 
-import { useKeys } from './use-keys';
+import { type ApiKeys, useKeys } from './use-keys';
 
 export function Keys() {
   const { apiKeys, loading, updateKey } = useKeys();
@@ -16,6 +16,7 @@ export function Keys() {
   const [falAIKey, setFalAIKey] = useState('');
   const [geminiKey, setGeminiKey] = useState('');
   const [perplexityKey, setPerplexityKey] = useState('');
+  const [exaKey, setExaKey] = useState('');
   const [unsplashKey, setUnsplashKey] = useState('');
 
   const [savingStates, setSavingStates] = useState<Record<string, boolean>>({});
@@ -28,19 +29,45 @@ export function Keys() {
       setFalAIKey(apiKeys.fal?.apiKey || '');
       setGeminiKey(apiKeys.gemini?.apiKey || '');
       setPerplexityKey(apiKeys.perplexity?.apiKey || '');
+      setExaKey(apiKeys.exa?.key || '');
       setUnsplashKey(apiKeys.unsplash?.key || '');
       initialLoadDone.current = true;
     }
   }, [apiKeys, loading]);
 
-  // Handler to save key with loading state
-  const handleSaveKey = (provider: string, config: Record<string, string>) => {
+  // Handler to save key with loading state and preserve existing models
+  const handleSaveKey = (provider: string, config: Record<string, any>) => {
     setSavingStates(prev => ({ ...prev, [provider]: true }));
 
     try {
+      // Preserve the existing models configuration when updating API key
+      const preservedConfig = { ...config };
+
+      // Add existing models to the config if they exist and aren't already in the new config
+      // Only add models for AI providers that support models array (not unsplash/other keys)
+      const providerKey = provider as keyof ApiKeys;
+      const aiProviders = [
+        'openai',
+        'fal',
+        'gemini',
+        'perplexity',
+        'anthropic',
+        'vertex_anthropic',
+        'vertex_gemini',
+      ];
+      if (
+        aiProviders.includes(provider) &&
+        'models' in (apiKeys[providerKey] || {}) &&
+        !preservedConfig.models
+      ) {
+        // Type assertion to handle the fact that unsplash and other non-AI providers don't have models
+        const providerConfig = apiKeys[providerKey] as { models?: any[] };
+        preservedConfig.models = providerConfig.models || [];
+      }
+
       updateKey({
-        provider: provider as keyof typeof apiKeys,
-        config,
+        provider: providerKey,
+        config: preservedConfig,
       });
     } finally {
       // Clear saving state after a short delay for better UX
@@ -178,6 +205,277 @@ export function Keys() {
                   'Save'
                 )}
               </Button>
+            </div>
+          </div>
+
+          <Separator />
+
+          {/* Exa API Key */}
+          <div className="px-5 space-y-4">
+            <Label className="text-sm font-medium">Exa API Key</Label>
+            <div className="flex items-center gap-2">
+              <Input
+                type="password"
+                className="py-2 px-3 text-base font-normal placeholder:opacity-50"
+                value={exaKey}
+                placeholder="exa api key"
+                onChange={e => setExaKey(e.target.value)}
+              />
+              <Button
+                disabled={!exaKey || savingStates['exa']}
+                onClick={() => handleSaveKey('exa', { key: exaKey })}
+              >
+                {savingStates['exa'] ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  'Save'
+                )}
+              </Button>
+            </div>
+          </div>
+
+          <Separator />
+
+          {/* Anthropic API Key */}
+          <div className="px-5 space-y-4">
+            <div className="mb-4">
+              <Label
+                htmlFor="anthropic-key"
+                className="block text-sm font-medium mb-2"
+              >
+                Anthropic API Key
+              </Label>
+              <Input
+                placeholder="sk-ant-..."
+                type="password"
+                id="anthropic-key"
+                value={(apiKeys.anthropic?.apiKey as string) || ''}
+                onChange={e =>
+                  void updateKey({
+                    provider: 'anthropic',
+                    config: {
+                      ...apiKeys.anthropic,
+                      apiKey: e.target.value,
+                    },
+                  })
+                }
+              />
+            </div>
+            <div className="mb-4">
+              <Label
+                htmlFor="anthropic-base-url"
+                className="block text-sm font-medium mb-2"
+              >
+                Anthropic Base URL (Optional)
+              </Label>
+              <Input
+                placeholder="https://api.anthropic.com"
+                id="anthropic-base-url"
+                value={(apiKeys.anthropic?.baseUrl as string) || ''}
+                onChange={e =>
+                  void updateKey({
+                    provider: 'anthropic',
+                    config: {
+                      ...apiKeys.anthropic,
+                      baseUrl: e.target.value,
+                    },
+                  })
+                }
+              />
+            </div>
+          </div>
+
+          <Separator />
+
+          {/* Vertex AI Anthropic */}
+          <div className="px-5 space-y-4">
+            <h3 className="font-medium text-lg mb-2">Vertex Anthropic</h3>
+            <div className="mb-4">
+              <Label
+                htmlFor="vertex-anthropic-location"
+                className="block text-sm font-medium mb-2"
+              >
+                GCP Location
+              </Label>
+              <Input
+                placeholder="us-central1"
+                id="vertex-anthropic-location"
+                value={(apiKeys.vertex_anthropic?.location as string) || ''}
+                onChange={e =>
+                  void updateKey({
+                    provider: 'vertex_anthropic',
+                    config: {
+                      ...apiKeys.vertex_anthropic,
+                      location: e.target.value,
+                    },
+                  })
+                }
+              />
+            </div>
+            <div className="mb-4">
+              <Label
+                htmlFor="vertex-anthropic-client-email"
+                className="block text-sm font-medium mb-2"
+              >
+                GCP Service Account Email
+              </Label>
+              <Input
+                placeholder="service-account@project.iam.gserviceaccount.com"
+                id="vertex-anthropic-client-email"
+                value={
+                  (apiKeys.vertex_anthropic?.googleAuthOptions?.credentials
+                    ?.client_email as string) || ''
+                }
+                onChange={e => {
+                  const currentCredentials =
+                    apiKeys.vertex_anthropic?.googleAuthOptions?.credentials ||
+                    {};
+                  void updateKey({
+                    provider: 'vertex_anthropic',
+                    config: {
+                      ...apiKeys.vertex_anthropic,
+                      googleAuthOptions: {
+                        ...apiKeys.vertex_anthropic?.googleAuthOptions,
+                        credentials: {
+                          ...currentCredentials,
+                          client_email: e.target.value,
+                        },
+                      },
+                    },
+                  });
+                }}
+              />
+            </div>
+            <div className="mb-4">
+              <Label
+                htmlFor="vertex-anthropic-private-key"
+                className="block text-sm font-medium mb-2"
+              >
+                GCP Service Account Private Key
+              </Label>
+              <Input
+                placeholder="-----BEGIN PRIVATE KEY-----..."
+                type="password"
+                id="vertex-anthropic-private-key"
+                value={
+                  (apiKeys.vertex_anthropic?.googleAuthOptions?.credentials
+                    ?.private_key as string) || ''
+                }
+                onChange={e => {
+                  const currentCredentials =
+                    apiKeys.vertex_anthropic?.googleAuthOptions?.credentials ||
+                    {};
+                  void updateKey({
+                    provider: 'vertex_anthropic',
+                    config: {
+                      ...apiKeys.vertex_anthropic,
+                      googleAuthOptions: {
+                        ...apiKeys.vertex_anthropic?.googleAuthOptions,
+                        credentials: {
+                          ...currentCredentials,
+                          private_key: e.target.value,
+                        },
+                      },
+                    },
+                  });
+                }}
+              />
+            </div>
+          </div>
+
+          <Separator />
+
+          {/* Vertex AI Gemini */}
+          <div className="px-5 space-y-4">
+            <h3 className="font-medium text-lg mb-2">Vertex Gemini</h3>
+            <div className="mb-4">
+              <Label
+                htmlFor="vertex-gemini-location"
+                className="block text-sm font-medium mb-2"
+              >
+                GCP Location
+              </Label>
+              <Input
+                placeholder="us-central1"
+                id="vertex-gemini-location"
+                value={(apiKeys.vertex_gemini?.location as string) || ''}
+                onChange={e =>
+                  void updateKey({
+                    provider: 'vertex_gemini',
+                    config: {
+                      ...apiKeys.vertex_gemini,
+                      location: e.target.value,
+                    },
+                  })
+                }
+              />
+            </div>
+            <div className="mb-4">
+              <Label
+                htmlFor="vertex-gemini-client-email"
+                className="block text-sm font-medium mb-2"
+              >
+                GCP Service Account Email
+              </Label>
+              <Input
+                placeholder="service-account@project.iam.gserviceaccount.com"
+                id="vertex-gemini-client-email"
+                value={
+                  (apiKeys.vertex_gemini?.googleAuthOptions?.credentials
+                    ?.client_email as string) || ''
+                }
+                onChange={e => {
+                  const currentCredentials =
+                    apiKeys.vertex_gemini?.googleAuthOptions?.credentials || {};
+                  void updateKey({
+                    provider: 'vertex_gemini',
+                    config: {
+                      ...apiKeys.vertex_gemini,
+                      googleAuthOptions: {
+                        ...apiKeys.vertex_gemini?.googleAuthOptions,
+                        credentials: {
+                          ...currentCredentials,
+                          client_email: e.target.value,
+                        },
+                      },
+                    },
+                  });
+                }}
+              />
+            </div>
+            <div className="mb-4">
+              <Label
+                htmlFor="vertex-gemini-private-key"
+                className="block text-sm font-medium mb-2"
+              >
+                GCP Service Account Private Key
+              </Label>
+              <Input
+                placeholder="-----BEGIN PRIVATE KEY-----..."
+                type="password"
+                id="vertex-gemini-private-key"
+                value={
+                  (apiKeys.vertex_gemini?.googleAuthOptions?.credentials
+                    ?.private_key as string) || ''
+                }
+                onChange={e => {
+                  const currentCredentials =
+                    apiKeys.vertex_gemini?.googleAuthOptions?.credentials || {};
+                  void updateKey({
+                    provider: 'vertex_gemini',
+                    config: {
+                      ...apiKeys.vertex_gemini,
+                      googleAuthOptions: {
+                        ...apiKeys.vertex_gemini?.googleAuthOptions,
+                        credentials: {
+                          ...currentCredentials,
+                          private_key: e.target.value,
+                        },
+                      },
+                    },
+                  });
+                }}
+              />
             </div>
           </div>
 
