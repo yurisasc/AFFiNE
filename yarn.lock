@@ -931,6 +931,7 @@ __metadata:
     "@nestjs/websockets": "npm:^11.0.12"
     "@node-rs/argon2": "npm:^2.0.2"
     "@node-rs/crc32": "npm:^1.10.6"
+    "@openrouter/ai-sdk-provider": "npm:^0.7.2"
     "@opentelemetry/api": "npm:^1.9.0"
     "@opentelemetry/core": "npm:^1.29.0"
     "@opentelemetry/exporter-prometheus": "npm:^0.57.0"
@@ -9860,6 +9861,19 @@ __metadata:
   version: 2.1.0
   resolution: "@open-draft/until@npm:2.1.0"
   checksum: 10/622be42950afc8e89715d0fd6d56cbdcd13e36625e23b174bd3d9f06f80e25f9adf75d6698af93bca1e1bf465b9ce00ec05214a12189b671fb9da0f58215b6f4
+  languageName: node
+  linkType: hard
+
+"@openrouter/ai-sdk-provider@npm:^0.7.2":
+  version: 0.7.2
+  resolution: "@openrouter/ai-sdk-provider@npm:0.7.2"
+  dependencies:
+    "@ai-sdk/provider": "npm:1.1.3"
+    "@ai-sdk/provider-utils": "npm:2.2.8"
+  peerDependencies:
+    ai: ^4.3.16
+    zod: ^3.25.34
+  checksum: 10/5e7a96fb12a97628db10592e295f9f5abb82cd388b78bd9adb47d06ebf48da70fe9d7057c90ef6b917d6fdf6a0c56bb4e4fe3effac89a1d36d1bda4d4a02f53a
   languageName: node
   linkType: hard
 

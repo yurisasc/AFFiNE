@@ -12,6 +12,7 @@ export enum CopilotProviderType {
   Gemini = 'gemini',
   GeminiVertex = 'geminiVertex',
   OpenAI = 'openai',
+  OpenRouter = 'openrouter',
   Perplexity = 'perplexity',
 }
 

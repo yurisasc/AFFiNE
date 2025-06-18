@@ -13,6 +13,7 @@ import {
   GeminiVertexConfig,
 } from './providers/gemini/index';
 import { OpenAIConfig } from './providers/openai';
+import { OpenRouterConfig } from './providers/openrouter';
 import { PerplexityConfig } from './providers/perplexity';
 import { VertexSchema } from './providers/types';
 declare global {
@@ -28,6 +29,7 @@ declare global {
       storage: ConfigItem<StorageProviderConfig>;
       providers: {
         openai: ConfigItem<OpenAIConfig>;
+        openrouter: ConfigItem<OpenRouterConfig>;
         fal: ConfigItem<FalConfig>;
         gemini: ConfigItem<GeminiGenerativeConfig>;
         geminiVertex: ConfigItem<GeminiVertexConfig>;
@@ -53,9 +55,19 @@ defineModuleConfig('copilot', {
     desc: 'The config for the openai provider.',
     default: {
       apiKey: '',
-      baseUrl: 'https://openrouter.ai/api/v1',
+      baseUrl: 'https://api.openai.com/v1',
     },
     link: 'https://github.com/openai/openai-node',
+  },
+
+  // OpenRouter provider with both API key and baseUrl configuration
+  'providers.openrouter': {
+    desc: 'The config for the OpenRouter provider.',
+    default: {
+      apiKey: '',
+      baseUrl: 'https://openrouter.ai/api/v1',
+    },
+    link: 'https://openrouter.ai/docs',
   },
 
   // FAL provider

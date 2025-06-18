@@ -29,6 +29,11 @@ export type ApiKeys = {
     baseUrl?: string;
     models?: Model[];
   };
+  openrouter?: {
+    apiKey: string;
+    baseUrl?: string;
+    models?: Model[];
+  };
   fal?: {
     apiKey: string;
     models?: Model[];
@@ -149,6 +154,12 @@ export function useKeys() {
     const { providers } = data.appConfig.copilot;
     return {
       openai: providers.openai || { apiKey: '', baseUrl: '', models: [] },
+      openrouter: providers.openrouter || {
+        apiKey: '',
+        baseUrl: '',
+        models: [],
+      },
+      exa: providers.exa || { key: '' },
       fal: providers.fal || { apiKey: '', models: [] },
       gemini: providers.gemini || { apiKey: '', models: [] },
       perplexity: providers.perplexity || { apiKey: '', models: [] },
@@ -232,6 +243,7 @@ export function useKeys() {
           storage: 'storage',
           // Provider keys with their backend paths
           openai: 'providers.openai',
+          openrouter: 'providers.openrouter',
           fal: 'providers.fal',
           gemini: 'providers.gemini',
           perplexity: 'providers.perplexity',

@@ -5,6 +5,7 @@ import {
 import { FalProvider } from './fal';
 import { GeminiGenerativeProvider, GeminiVertexProvider } from './gemini';
 import { OpenAIProvider } from './openai';
+import { OpenRouterProvider } from './openrouter';
 import { PerplexityProvider } from './perplexity';
 
 export const CopilotProviders = [
@@ -15,6 +16,7 @@ export const CopilotProviders = [
   PerplexityProvider,
   AnthropicOfficialProvider,
   AnthropicVertexProvider,
+  OpenRouterProvider,
 ];
 
 export {
@@ -25,6 +27,7 @@ export { CopilotProviderFactory } from './factory';
 export { FalProvider } from './fal';
 export { GeminiGenerativeProvider, GeminiVertexProvider } from './gemini';
 export { OpenAIProvider } from './openai';
+export { OpenRouterProvider } from './openrouter';
 export { PerplexityProvider } from './perplexity';
 export type { CopilotProvider } from './provider';
 export * from './types';

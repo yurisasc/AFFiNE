@@ -13,6 +13,8 @@ export function Keys() {
 
   const [openAIKey, setOpenAIKey] = useState('');
   const [openAIBaseUrl, setOpenAIBaseUrl] = useState('');
+  const [openRouterKey, setOpenRouterKey] = useState('');
+  const [openRouterBaseUrl, setOpenRouterBaseUrl] = useState('');
   const [falAIKey, setFalAIKey] = useState('');
   const [geminiKey, setGeminiKey] = useState('');
   const [perplexityKey, setPerplexityKey] = useState('');
@@ -26,6 +28,8 @@ export function Keys() {
     if (!loading && apiKeys && !initialLoadDone.current) {
       setOpenAIKey(apiKeys.openai?.apiKey || '');
       setOpenAIBaseUrl(apiKeys.openai?.baseUrl || '');
+      setOpenRouterKey(apiKeys.openrouter?.apiKey || '');
+      setOpenRouterBaseUrl(apiKeys.openrouter?.baseUrl || '');
       setFalAIKey(apiKeys.fal?.apiKey || '');
       setGeminiKey(apiKeys.gemini?.apiKey || '');
       setPerplexityKey(apiKeys.perplexity?.apiKey || '');
@@ -48,6 +52,7 @@ export function Keys() {
       const providerKey = provider as keyof ApiKeys;
       const aiProviders = [
         'openai',
+        'openrouter',
         'fal',
         'gemini',
         'perplexity',
@@ -125,6 +130,53 @@ export function Keys() {
             </div>
             <p className="text-xs text-gray-500 mt-1">
               You can use this for OpenAI-compatible APIs like OpenRouter
+            </p>
+          </div>
+
+          <Separator />
+
+          {/* OpenRouter Configuration */}
+          <div className="px-5 space-y-4">
+            <Label className="text-sm font-medium">OpenRouter API Key</Label>
+            <div className="flex items-center gap-2">
+              <Input
+                type="password"
+                className="py-2 px-3 text-base font-normal placeholder:opacity-50"
+                value={openRouterKey}
+                placeholder="sk-or-xxxxxxxxxxxxx-xxxxxxxxxxxxxx"
+                onChange={e => setOpenRouterKey(e.target.value)}
+              />
+              <Button
+                disabled={!openRouterKey || savingStates['openrouter']}
+                onClick={() =>
+                  handleSaveKey('openrouter', {
+                    apiKey: openRouterKey,
+                    baseUrl:
+                      openRouterBaseUrl || 'https://openrouter.ai/api/v1',
+                  })
+                }
+              >
+                {savingStates['openrouter'] ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  'Save'
+                )}
+              </Button>
+            </div>
+            <Label className="text-sm font-medium mt-3">
+              OpenRouter Base URL (optional)
+            </Label>
+            <div className="flex items-center gap-2">
+              <Input
+                type="text"
+                className="py-2 px-3 text-base font-normal placeholder:opacity-50"
+                value={openRouterBaseUrl}
+                placeholder="https://openrouter.ai/api/v1"
+                onChange={e => setOpenRouterBaseUrl(e.target.value)}
+              />
+            </div>
+            <p className="text-xs text-gray-500 mt-1">
+              OpenRouter provides access to many AI models through a unified API
             </p>
           </div>
 

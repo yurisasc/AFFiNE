@@ -31,6 +31,7 @@ import { useKeys } from './use-keys';
 
 type ModelProvider =
   | 'openai'
+  | 'openrouter'
   | 'gemini'
   | 'perplexity'
   | 'fal'
@@ -41,6 +42,7 @@ type ModelProvider =
 const hasModels = (provider: string): provider is ModelProvider => {
   return [
     'openai',
+    'openrouter',
     'gemini',
     'perplexity',
     'fal',
@@ -450,8 +452,9 @@ export function Models() {
             }}
             className="w-full"
           >
-            <TabsList className="grid grid-cols-6 mb-4">
+            <TabsList className="grid grid-cols-7 mb-4">
               <TabsTrigger value="openai">OpenAI</TabsTrigger>
+              <TabsTrigger value="openrouter">OpenRouter</TabsTrigger>
               <TabsTrigger value="gemini">Gemini</TabsTrigger>
               <TabsTrigger value="perplexity">Perplexity</TabsTrigger>
               <TabsTrigger value="fal">FAL</TabsTrigger>
@@ -463,6 +466,7 @@ export function Models() {
 
             {[
               'openai',
+              'openrouter',
               'gemini',
               'perplexity',
               'fal',
@@ -479,29 +483,6 @@ export function Models() {
                   <Label className="text-sm font-medium">
                     Available Models
                   </Label>
-                  {/* Add debug logs without breaking JSX */}
-                  {(() => {
-                    console.log('Debug Models for ' + provider + ':', {
-                      provider,
-                      hasApiKey: Boolean(apiKeys[provider as ModelProvider]),
-                      modelsExists: Boolean(
-                        apiKeys[provider as ModelProvider]?.models
-                      ),
-                      modelsType:
-                        typeof apiKeys[provider as ModelProvider]?.models,
-                      isArray: Array.isArray(
-                        apiKeys[provider as ModelProvider]?.models
-                      ),
-                      modelsContent: JSON.stringify(
-                        apiKeys[provider as ModelProvider]?.models
-                      ),
-                      apiKeyContent: JSON.stringify(
-                        apiKeys[provider as ModelProvider]
-                      ),
-                      rawValue: apiKeys[provider as ModelProvider]?.models,
-                    });
-                    return null;
-                  })()}
                   <div className="flex flex-wrap gap-2">
                     {ensureModelsArray(
                       apiKeys[provider as ModelProvider]?.models

@@ -56,10 +56,32 @@ export abstract class CopilotProvider<C = any> {
   get models(): CopilotProviderModel[] {
     // Use config models if available, otherwise use default models
     const configWithModels = this.config as any;
-    return Array.isArray(configWithModels?.models) &&
+
+    // Check if models is a direct array
+    if (
+      Array.isArray(configWithModels?.models) &&
       configWithModels.models.length > 0
-      ? configWithModels.models
-      : this.defaultModels;
+    ) {
+      return configWithModels.models;
+    }
+
+    // Check if models is a JSON string that needs parsing
+    if (typeof configWithModels?.models === 'string') {
+      try {
+        const parsedModels = JSON.parse(configWithModels.models);
+        if (Array.isArray(parsedModels) && parsedModels.length > 0) {
+          return parsedModels;
+        }
+      } catch (e) {
+        this.logger.error(
+          `Failed to parse models string for ${this.type} provider`,
+          e
+        );
+      }
+    }
+
+    // Fall back to default models if config models not available or not parseable
+    return this.defaultModels;
   }
 
   @OnEvent('config.init')
