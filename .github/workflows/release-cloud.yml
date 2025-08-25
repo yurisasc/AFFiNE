@@ -30,6 +30,7 @@ jobs:
 
   deploy:
     name: Deploy to cluster
+    if: ${{ github.repository_owner == 'toeverything' }}
     environment: ${{ inputs.build-type }}
     needs:
       - build-images
