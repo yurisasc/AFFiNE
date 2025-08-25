@@ -136,6 +136,16 @@ jobs:
         with:
           electron-install: false
           extra-flags: workspaces focus @affine/server-native
+      - name: Configure @napi-rs registry (avoid npm 403)
+        shell: bash
+        run: |
+          # Prefer the official npm registry for @napi-rs
+          npm config set @napi-rs:registry https://registry.npmjs.org
+          # If the package lookup fails (e.g., 403/timeout), fall back to npmmirror
+          if ! npm view @napi-rs/cross-toolchain-x64-target-aarch64@0.0.19 version >/dev/null 2>&1; then
+            echo "Falling back to npmmirror for @napi-rs scope"
+            npm config set @napi-rs:registry https://registry.npmmirror.com
+          fi
       - name: Build Rust
         uses: ./.github/actions/build-rust
         env:
